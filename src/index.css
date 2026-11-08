@@ -1,0 +1,193 @@
+@import "tailwindcss";
+@import "leaflet/dist/leaflet.css";
+
+/* Dark mode: <html class="dark"> үед идэвхжинэ (ThemeContext тохируулна) */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* LastMinute — дизайны токенууд
+   Санаа: «Хангайн үдэш» — гүн ногоон-хөх тэнгэр, ус шиг teal, оройн гэрлийн шар, жаргах нарны apricot.
+   Цайвар/бараан горимд өөрчлөгддөг өнгө нь CSS хувьсагч, харин hero, footer
+   зэрэг үргэлж шөнийн өнгөтэй хэсгүүд midnight/night/dusk тогтмол өнгө ашиглана. */
+:root {
+  --paper: #f2f4f5;
+  --surface: #ffffff;
+  --surface-2: #f7f9f9;
+  --ink: #0e1e28;
+  --ink-soft: #455761;
+  --ink-mute: #86969f;
+  --line: #dfe5e8;
+  --brand: #12756e;
+  --brand-dark: #0c5f59;
+  --brand-tint: #e2f1ef;
+  --amber-tint: #fbf1dd;
+  --amber-ink: #8a5a12;
+  --ember-tint: #fcebe5;
+  --mint-tint: #e3f2e8;
+  --sky-tint: #e4eef5;
+  --rose-tint: #fbe7e7;
+  --shadow-card: 0 1px 2px rgb(14 30 40 / 0.04), 0 8px 24px -12px rgb(14 30 40 / 0.14);
+  --shadow-lift: 0 2px 4px rgb(14 30 40 / 0.05), 0 24px 48px -20px rgb(14 30 40 / 0.35);
+  color-scheme: light;
+}
+
+.dark {
+  --paper: #08141b;
+  --surface: #0e1f29;
+  --surface-2: #132733;
+  --ink: #e7eef1;
+  --ink-soft: #a6b7bf;
+  --ink-mute: #6b818c;
+  --line: #1e3644;
+  --brand: #3fb8ac;
+  --brand-dark: #2fa195;
+  --brand-tint: #0f2e2c;
+  --amber-tint: #2e2413;
+  --amber-ink: #f2cb85;
+  --ember-tint: #3a1e16;
+  --mint-tint: #10291b;
+  --sky-tint: #0f2333;
+  --rose-tint: #351a1c;
+  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.3), 0 8px 24px -12px rgb(0 0 0 / 0.6);
+  --shadow-lift: 0 2px 4px rgb(0 0 0 / 0.3), 0 22px 44px -18px rgb(0 0 0 / 0.8);
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-ink-mute: var(--ink-mute);
+  --color-line: var(--line);
+  --color-brand: var(--brand);
+  --color-brand-dark: var(--brand-dark);
+  --color-brand-tint: var(--brand-tint);
+  --color-amber-tint: var(--amber-tint);
+  --color-amber-ink: var(--amber-ink);
+  --color-ember-tint: var(--ember-tint);
+  --color-mint-tint: var(--mint-tint);
+  --color-sky-tint: var(--sky-tint);
+  --color-rose-tint: var(--rose-tint);
+  --shadow-card: var(--shadow-card);
+  --shadow-lift: var(--shadow-lift);
+}
+
+@theme {
+  /* Горимоос үл хамаарах тогтмол өнгө */
+  --color-midnight: #0b1a24;
+  --color-night: #0f2633;
+  --color-dusk: #163847;
+  --color-amber: #edb45c;
+  --color-ember: #e4684a;
+  --color-mint: #2f8f5b;
+  --color-sky: #3d7ea6;
+  --color-rose: #d64545;
+
+  --font-display: "Unbounded", system-ui, sans-serif;
+  --font-sans: "Manrope", system-ui, sans-serif;
+}
+
+@layer base {
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    @apply bg-paper text-ink font-sans antialiased;
+    font-feature-settings: "tnum" 1;
+    transition: background-color 0.25s ease;
+  }
+  h1, h2, h3 { @apply font-display tracking-tight; }
+  :focus-visible { @apply outline-2 outline-offset-2 outline-brand; }
+  ::selection { @apply bg-amber/40; }
+}
+
+@utility container-page { @apply mx-auto w-full max-w-6xl px-4 sm:px-6; }
+
+@utility btn {
+  @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-bold
+         transition-[background-color,color,box-shadow,transform] active:scale-[0.98]
+         disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100;
+}
+@utility btn-primary { @apply btn bg-brand text-white shadow-[0_6px_16px_-6px_rgb(91_61_245/0.6)] hover:bg-brand-dark; }
+@utility btn-dark    { @apply btn bg-ink text-paper hover:opacity-90; }
+@utility btn-ghost   { @apply btn text-ink-soft hover:bg-ink/5 hover:text-ink; }
+@utility btn-outline { @apply btn border border-line bg-surface text-ink hover:border-ink/30; }
+@utility btn-danger  { @apply btn bg-rose text-white hover:bg-rose/90; }
+@utility btn-sunset  { @apply btn bg-gradient-to-r from-ember to-amber text-midnight hover:brightness-105; }
+
+@utility input {
+  @apply w-full rounded-xl border border-line bg-surface px-3.5 py-2.5 text-sm text-ink
+         placeholder:text-ink-mute transition-colors
+         focus:border-brand focus:outline-none focus:ring-4 focus:ring-brand/15;
+}
+@utility input-error { @apply border-rose focus:border-rose focus:ring-rose/10; }
+@utility label { @apply mb-1.5 block text-sm font-semibold text-ink; }
+@utility field-error { @apply mt-1 text-xs font-medium text-rose; }
+@utility panel { @apply rounded-2xl border border-line/80 bg-surface shadow-card; }
+
+/* Шөнийн хэсгүүдийн дэвсгэр: гүн ногоон-хөх тэнгэр, тэнгэрийн хаяаны teal туяа,
+   тал нутгийн өндөршлийн шугам (contour), нарийн ширхэгт (grain) бүтэц */
+@utility bg-night-sky {
+  background:
+    radial-gradient(70% 55% at 50% 108%, rgb(228 104 74 / 0.42), rgb(237 180 92 / 0.12) 45%, transparent 72%),
+    radial-gradient(60% 50% at 85% 0%, rgb(63 184 172 / 0.18), transparent 70%),
+    repeating-radial-gradient(ellipse at 20% 120%, rgb(255 255 255 / 0.035) 0 1px, transparent 1.5px 26px),
+    linear-gradient(180deg, #0b1a24 0%, #0f2633 55%, #163847 100%);
+}
+@utility grain {
+  position: relative;
+  &::before {
+    content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0.18; mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+}
+
+/* Үнэ буурах "гал хамхуул" шугамын оч */
+@keyframes fuse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgb(255 181 71 / 0.6); }
+  50%      { box-shadow: 0 0 0 5px rgb(255 181 71 / 0); }
+}
+.fuse-spark { animation: fuse-glow 1.6s ease-in-out infinite; }
+
+@keyframes price-tick {
+  from { transform: translateY(-6px); opacity: 0.2; }
+  to   { transform: translateY(0); opacity: 1; }
+}
+.price-tick { animation: price-tick 0.35s ease-out; }
+
+/* Hero: хотын цонхнууд нэг нэгээрээ унтарна — "хаах дөхсөн" үе */
+@keyframes window-off {
+  0%, 55%  { opacity: 1; }
+  65%, 100% { opacity: 0.08; }
+}
+.window-off { animation: window-off 14s ease-in-out infinite; }
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.25; }
+  50% { opacity: 0.9; }
+}
+.twinkle { animation: twinkle 4s ease-in-out infinite; }
+
+@keyframes live-dot {
+  0%   { transform: scale(1); opacity: 0.7; }
+  100% { transform: scale(2.6); opacity: 0; }
+}
+.live-dot::after {
+  content: ""; position: absolute; inset: 0; border-radius: 9999px; background: currentColor;
+  animation: live-dot 1.8s ease-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fuse-spark, .price-tick, .window-off, .twinkle, .live-dot::after { animation: none; }
+  body { transition: none; }
+}
+
+/* Leaflet-ийг брэнд, горимд тааруулна */
+/* Leaflet-ийн z-index (400+) цонх, header-ийн дээр гарахаас сэргийлнэ */
+.leaflet-container { font-family: var(--font-sans); background: var(--surface-2); isolation: isolate; z-index: 0; }
+.leaflet-popup-content-wrapper, .leaflet-popup-tip { background: var(--surface); color: var(--ink); }
+.leaflet-popup-content-wrapper { border-radius: 16px; box-shadow: var(--shadow-lift); }
+.leaflet-popup-content { margin: 14px 16px; }
+.dark .leaflet-control-attribution { background: rgb(22 19 44 / 0.8); color: var(--ink-mute); }
+.dark .leaflet-control-attribution a { color: var(--ink-soft); }
+.dark .leaflet-bar a { background: var(--surface); color: var(--ink); border-color: var(--line); }
+.lm-marker { background: none; border: none; }

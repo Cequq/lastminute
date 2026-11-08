@@ -1,0 +1,16 @@
+project_id = "lastminute"
+
+# verify_jwt = false: платформын JWT шалгалт шинэ publishable түлхүүрийг танихгүй байж болох тул
+# хэрэглэгчийг функц дотор requireUser() (Supabase Auth)-аар шалгадаг.
+# qpay-webhook-ийг QPay дууддаг тул JWT байхгүй; callback_token + QPay API-аар хамгаална.
+[functions.qpay-create-invoice]
+verify_jwt = false
+
+[functions.qpay-check]
+verify_jwt = false
+
+[functions.qpay-mock-pay]
+verify_jwt = false
+
+[functions.qpay-webhook]
+verify_jwt = false
